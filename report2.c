@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 
   if (isalpha(host[0])){  // 주소가 도메인이면
     he = gethostbyname(host);
-    printf("%s\n", inet_ntoa(addr));
+    printf("%s\n", he->h_addr_list[0]);
   }
   else {                  // 주소가 아이피이면
     addr.s_addr = inet_addr(host);
