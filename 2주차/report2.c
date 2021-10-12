@@ -21,8 +21,8 @@ int main(int argc, char **argv)
     struct hostent {
       char*   h_name;         // 호스트 이름
       char**  h_aliases;      // 호스트 별명들
-      int	    h_addrtype;     // 주소종류(AF_INET=2)
-      int	    h_length;       // 주소크기(바이트)
+      int	    h_addrtype;     // 주소종류(AF_INET=2) IPv4 = AF_INET, IPv6 = AF_INET6
+      int	    h_length;       // 주소크기(바이트) IPv4 = 4, IPv16 = 16
       char**  h_addr_list;    // IP주소 리스트(포인터배열)
     }
 
