@@ -43,13 +43,13 @@ int main(int argc, char *argv[])
     if (!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
       break;
 
-    write(sock, message, strlen(message));
-
     // 기존 코드
+    // write(sock, message, strlen(message));
     // str_len = read(sock, message, BUF_SIZE-1);
     // message[str_len] = 0;
 
     //수정
+    str_len = write(sock, message, strlen(message));
     recv_len = 0;
     while (recv_len < str_len)
     {
