@@ -1,6 +1,7 @@
 {
   "files.associations": {
-    "fcntl.h": "c"
+    "fcntl.h": "c",
+    "inet.h": "c"
   },
   "polacode.transparentBackground": true
 }
