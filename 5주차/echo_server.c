@@ -12,12 +12,13 @@ int main(int argc, char *argv[])
 {
   int serv_sock, clnt_sock;
   char message[BUF_SIZE];
-  int str_len, i;
+  int str_len;
 
   struct sockaddr_in serv_adr;
   struct sockaddr_in clnt_adr;
   socklen_t clnt_adr_sz;
 
+  // 명령어가 제대로 입력되지 않았다면
   if (argc != 2)
   {
     printf("Usage : %s <port>\n", argv[0]);
@@ -41,25 +42,33 @@ int main(int argc, char *argv[])
 
   clnt_adr_sz = sizeof(clnt_adr);
 
-  for (i = 0; i < 5; i++)
+  // 여기서부터 클라이언트로부터 데이터 받아옴
+  clnt_sock = accept(serv_sock, (struct sockaddr *)&clnt_adr, &clnt_adr_sz);
+  if (clnt_sock == -1)
+    error_handling("accept() error");
+  else
+    printf("클라이언트와 연결되었습니다.\n");
+
+  // read 함수는 연결이 끊기면 0을 반환함
+  while ((str_len = read(clnt_sock, message, BUF_SIZE)) != 0)
   {
-    clnt_sock = accept(serv_sock, (struct sockaddr *)&clnt_adr, &clnt_adr_sz);
-    if (clnt_sock == -1)
-      error_handling("accept() error");
-    else
-      printf("Connected client %d \n", i + 1);
+    // message 안에 전에 보냈던 내용들이 아직 들어있기 때문에,
+    // read로 읽은 문자 길이 만큼만 받아들이고, 그 뒤는 모두 무시
+    message[str_len] = 0;
 
-    while ((str_len = read(clnt_sock, message, BUF_SIZE)) != 0)
-    {
-      write(clnt_sock, message, str_len);
-      printf("message from client : %s\n", message);
-      printf("message from client size : %d\n", str_len);
-    }
+    // message 안에 \n이 포함되어 있으므로 message를 찍을때는 개행하지 않음
+    printf("클라이언트로부터 온 메시지 : %s", message);
+    printf("메시지의 크기 : %d\n", str_len);
 
-    close(clnt_sock);
+    puts("\n클라이언트로 다시 보내는 중...\n");
+    write(clnt_sock, message, str_len);
   }
 
+  printf("클라이언트와 연결이 끊어졌습니다. 서버를 종료합니다.\n");
+
+  close(clnt_sock);
   close(serv_sock);
+
   return 0;
 }
 

@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
   int str_len, recv_len, recv_cnt;
   struct sockaddr_in serv_adr;
 
+  // 명령어가 제대로 입력되지 않았다면
   if (argc != 3)
   {
     printf("Usage : %s <IP> <port>\n", argv[0]);
@@ -31,17 +32,19 @@ int main(int argc, char *argv[])
   serv_adr.sin_port = htons(atoi(argv[2]));
 
   if (connect(sock, (struct sockaddr *)&serv_adr, sizeof(serv_adr)) == -1)
-    error_handling("connect() error!");
+    error_handling("connect() error");
   else
-    puts("Connected...........");
+    puts("서버와 연결되었습니다.");
 
   while (1)
   {
-    fputs("Input message(Q to quit): ", stdout);
+    fputs("메시지 입력(Q는 종료): ", stdout);
     fgets(message, BUF_SIZE, stdin);
 
-    if (!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
+    if (!strcmp(message, "q\n") || !strcmp(message, "Q\n")){
+      puts("연결을 종료합니다.");
       break;
+    }
 
     // 기존 코드
     // write(sock, message, strlen(message));
@@ -49,17 +52,18 @@ int main(int argc, char *argv[])
     // message[str_len] = 0;
 
     //수정
+    puts("서버에 메시지 전송!");
     str_len = write(sock, message, strlen(message));
     recv_len = 0;
     while (recv_len < str_len)
     {
       recv_cnt = read(sock, &message[recv_len], BUF_SIZE - 1);
       if (recv_cnt == -1)
-        error_handling("read() error1");
+        error_handling("read() error");
       recv_len += recv_cnt;
     }
     message[recv_len] = 0;
-    printf("Message from server: %s", message);
+    printf("\n서버로부터 온 메시지: %s\n", message);
   }
 
   close(sock);
