@@ -28,9 +28,9 @@ int main(int argc, char *argv[])
 		error_handling("socket() error");
 
 	// SO_REUSEADDR = FALSE 적용 //
-	// optlen = sizeof(option);
-	// option = TRUE;
-	// setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, &option, optlen);
+	optlen = sizeof(option);
+	option = TRUE;
+	setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, &option, optlen);
 
 	memset(&serv_adr, 0, sizeof(serv_adr));
 	serv_adr.sin_family = AF_INET;
